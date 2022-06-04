@@ -31,6 +31,9 @@ class GoodsList {
   fetchData() {
     this.list = goods;
   }
+  getCount() {
+    return this.list.reduce((acc = 0, cur) => acc + cur.price, 0);
+  }
 
   render() {
     const goodsList = this.list

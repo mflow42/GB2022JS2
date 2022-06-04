@@ -33,7 +33,7 @@ button{
 .btn-cart, .logo{
     align-self: center;
 }
-.products{
+.goods-list{
     column-gap: 30px;
     display: grid;
     grid-template-columns: repeat(auto-fit, 200px);
@@ -44,7 +44,7 @@ button{
 p {
     margin: 0 0 5px 0;
 }
-.product-item{
+.goods-item{
     display: flex;
     flex-direction: column;
     width: 200px;

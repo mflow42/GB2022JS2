@@ -1,17 +1,24 @@
-this.goods = [
-  { id: 1, title: "Shirt", price: 150 },
-  { id: 2, title: "Socks", price: 50 },
-  { id: 3, title: "Jacket", price: 350 },
-  { id: 4, title: "Shoes", price: 250 },
-];
+const BASE_URL =
+  "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses";
+const GOODS = `${BASE_URL}/catalogData.json`;
+
+function service(url, callback) {
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", url);
+  const loadHandler = () => {
+    callback(JSON.parse(xhr.response));
+  };
+  xhr.onload = loadHandler;
+  xhr.send();
+}
 
 class GoodsItem {
   constructor(
-    { id = 0, title = "", price = 0 },
+    { id_product = 0, product_name = "", price = 0 },
     img = "https://via.placeholder.com/200x150"
   ) {
-    this.id = id;
-    this.title = title;
+    this.id_product = id_product;
+    this.product_name = product_name;
     this.price = price;
     this.img = img;
   }
@@ -19,7 +26,7 @@ class GoodsItem {
     return `
     <div class="goods-item">
       <img src="${this.img}">
-      <h3>${this.title}</h3>
+      <h3>${this.product_name}</h3>
       <p>${this.price}</p>
       <button class="buy-btn">Купить</button>
     </div>
@@ -28,24 +35,30 @@ class GoodsItem {
 }
 
 class GoodsList {
-  fetchData() {
-    this.list = goods;
+  items = [];
+
+  fetchGoods(callback) {
+    service(GOODS, (data) => {
+      this.items = data;
+      callback();
+    });
   }
   getCount() {
-    return this.list.reduce((acc = 0, cur) => acc + cur.price, 0);
+    return this.items.reduce((acc = 0, { price }) => acc + price, 0);
   }
 
   render() {
-    const goodsList = this.list
+    const goods = this.items
       .map((item) => {
         const goodsItem = new GoodsItem(item);
         return goodsItem.render();
       })
       .join("");
-    document.querySelector(".goods-list").innerHTML = goodsList;
+    document.querySelector(".goods-list").innerHTML = goods;
   }
 }
 
-const goodsList = new GoodsList(goods);
-goodsList.fetchData();
-goodsList.render();
+const goodsList = new GoodsList();
+goodsList.fetchGoods(() => {
+  goodsList.render();
+});

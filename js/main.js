@@ -1,6 +1,7 @@
 const BASE_URL =
   "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses";
-const GOODS = `${BASE_URL}/catalogData.json`;
+const GET_GOODS_ITEMS = `${BASE_URL}/catalogData.json`;
+const GET_BASKET_GOODS_ITEMS = `${BASE_URL}/getBasket.json`;
 
 function service(url, callback) {
   const xhr = new XMLHttpRequest();
@@ -38,7 +39,7 @@ class GoodsList {
   items = [];
 
   fetchGoods(callback) {
-    service(GOODS, (data) => {
+    service(GET_GOODS_ITEMS, (data) => {
       this.items = data;
       callback();
     });
@@ -58,7 +59,19 @@ class GoodsList {
   }
 }
 
+class BasketGoods {
+  items = [];
+  fetchData() {
+    service(GET_BASKET_GOODS_ITEMS, (data) => {
+      this.items = data;
+    });
+  }
+}
+
 const goodsList = new GoodsList();
 goodsList.fetchGoods(() => {
   goodsList.render();
 });
+
+const basketGoods = new BasketGoods();
+basketGoods.fetchData();

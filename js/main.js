@@ -5,7 +5,7 @@ const GET_BASKET_GOODS_ITEMS = `${BASE_URL}/getBasket.json`;
 
 function service(url, callback) {
   fetch(url, {
-    method: 'GET',
+    method: "GET",
   })
     .then((res) => res.json())
     .then((data) => {
@@ -39,11 +39,19 @@ class GoodsList {
   items = [];
   filteredItems = [];
 
-  fetchGoods(callback) {
-    service(GET_GOODS_ITEMS, (data) => {
-      this.items = data;
-      this.filteredItems = data;
-      callback();
+  fetchGoods() {
+    const prom = new Promise((resolve, reject) => {
+      service(GET_GOODS_ITEMS, (data) => {
+        this.items = data;
+        this.filteredItems = data;
+        data === undefined ? reject(new Error("Ошибка")) : resolve();
+      });
+    });
+    prom.then(() => {
+      this.render();
+    });
+    prom.catch((err) => {
+      console.error(err);
     });
   }
 

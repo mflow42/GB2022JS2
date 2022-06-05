@@ -32,6 +32,9 @@ button {
   display: flex;
   margin: 0 15px 0 0;
 }
+.goods-search {
+  padding: 0px 10px;
+}
 
 .search-button {
   background-color: #5dbea3;

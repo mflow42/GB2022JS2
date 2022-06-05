@@ -9,81 +9,52 @@ function service(url) {
   }).then((res) => res.json());
 }
 
-class GoodsItem {
-  constructor(
-    { id_product = 0, product_name = "", price = 0 },
-    img = "https://via.placeholder.com/200x150"
-  ) {
-    this.id_product = id_product;
-    this.product_name = product_name;
-    this.price = price;
-    this.img = img;
-  }
-  render() {
-    return `
-    <div class="goods-item">
-      <img src="${this.img}">
-      <h3>${this.product_name}</h3>
-      <p>${this.price}</p>
-      <button class="buy-btn">Купить</button>
-    </div>
-    `;
-  }
-}
+window.onload = () => {
+  const app = new Vue({
+    el: "#root",
+    data: {
+      items: [],
+      searchValue: "",
+      isItemsEmpty: true,
+      isVisibleCart: false,
+      cart: {},
+    },
 
-class GoodsList {
-  items = [];
-  filteredItems = [];
+    methods: {
+      toggleCartVisibility() {
+        this.isVisibleCart ? (this.isVisibleCart = false)
+          : (this.isVisibleCart = true);
+      },
+    },
 
-  fetchGoods() {
-    return service(GET_GOODS_ITEMS).then((data) => {
-      this.items = data;
-      this.filteredItems = data;
-      return data;
-    });
-  }
+    computed: {
+      getCount() {
+        return this.items.reduce((acc = 0, { price }) => acc + price, 0);
+      },
+      filteredItems() {
+        return this.items.filter(({ product_name }) => {
+          return new RegExp(this.searchValue, "i").test(product_name);
+        });
+      },
+    },
 
-  filter(str) {
-    this.filteredItems = this.items.filter(({ product_name }) => {
-      return new RegExp(str, "i").test(product_name);
-    });
-  }
+    mounted() {
+      service(GET_GOODS_ITEMS).then((data) => {
+        data.map((item) => {
+          item.img = "https://via.placeholder.com/200x150";
+        });
+        this.items = data;
+        this.isItemsEmpty = this.items === [] ? true : false;
+        return data;
+      });
 
-  getCount() {
-    return this.items.reduce((acc = 0, { price }) => acc + price, 0);
-  }
-
-  render() {
-    const goods = this.filteredItems
-      .map((item) => {
-        const goodsItem = new GoodsItem(item);
-        return goodsItem.render();
-      })
-      .join("");
-    document.querySelector(".goods-list").innerHTML = goods;
-  }
-}
-
-class BasketGoods {
-  items = [];
-  fetchData() {
-    service(GET_BASKET_GOODS_ITEMS, (data) => {
-      this.items = data;
-    });
-  }
-}
-
-const goodsList = new GoodsList();
-goodsList.fetchGoods().then((data) => {
-  goodsList.render();
-});
-
-const basketGoods = new BasketGoods();
-basketGoods.fetchData();
-
-document
-  .getElementsByClassName("goods-search")[0]
-  .addEventListener("input", (event) => {
-    goodsList.filter(event.target.value);
-    goodsList.render();
+      service(GET_BASKET_GOODS_ITEMS).then((data) => {
+        this.cart = data;
+        console.log(this.cart.amount);
+        console.log(this.cart.contents);
+        // TODO
+        return data;
+      });
+    },
   });
+};

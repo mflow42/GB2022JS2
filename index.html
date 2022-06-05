@@ -4,21 +4,73 @@
     <meta charset="UTF-8" />
     <title>Интернет-магазин</title>
     <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="js/main.js"></script>
   </head>
 
   <body>
-    <header class="header">
-      <div class="container">
-        <div class="search">
-          <input type="text" placeholder="Введите поисковый текст" class="goods-search" />
-          <button class="btn search-button">Искать</button>
+    <div id="root">
+      <header class="header">
+        <div class="container">
+          <div class="search">
+            <input
+              type="text"
+              placeholder="Введите поисковый текст"
+              class="goods-search"
+              v-model="searchValue"
+            />
+          </div>
+          <div class="container-cart">
+            <button
+              class="btn btn-cart"
+              @click="toggleCartVisibility"
+              type="button"
+            >
+              Корзина
+            </button>
+            <div class="cart" v-if="isVisibleCart">
+              <div class="cart-list">
+                <div class="first-row">
+                  <div class="col-id">id</div>
+                  <div class="col-product">product</div>
+                  <div class="col-price">price</div>
+                  <div class="col-qty">qty</div>
+                  <div class="col-total">total</div>
+                </div>
+                <div class="cart-rows" v-for="item in cart.contents">
+                  <div class="col-id">{{item.id_product}}</div>
+                  <div class="col-product">{{item.product_name}}</div>
+                  <div class="col-price">{{item.price}}</div>
+                  <div class="col-qty">{{item.quantity}}</div>
+                  <div class="col-total">{{item.price*item.quantity}}</div>
+                </div>
+                <div class="btn-wrapper">
+                  <button
+                    class="btn btn-cart-close"
+                    @click="toggleCartVisibility"
+                    type="button"
+                  >
+                    Закрыть
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <button class="btn btn-cart" type="button">Корзина</button>
-      </div>
-    </header>
-    <main class="main">
-      <div class="goods-list"></div>
-    </main>
-    <script src="js/main.js"></script>
+      </header>
+      <main class="main">
+        <div class="goods-list">
+          <div class="empty-data" v-if="isItemsEmpty">
+            <p>Нет данных</p>
+          </div>
+          <div class="goods-item" v-for="item in filteredItems">
+            <img :src="item.img" />
+            <h3>{{item.product_name}}</h3>
+            <p>{{item.price}}</p>
+            <button class="buy-btn">Купить</button>
+          </div>
+        </div>
+      </main>
+    </div>
   </body>
 </html>

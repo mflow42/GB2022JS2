@@ -3,14 +3,10 @@ const BASE_URL =
 const GET_GOODS_ITEMS = `${BASE_URL}/catalogData.json`;
 const GET_BASKET_GOODS_ITEMS = `${BASE_URL}/getBasket.json`;
 
-function service(url, callback) {
-  fetch(url, {
+function service(url) {
+  return fetch(url, {
     method: "GET",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      callback(data);
-    });
+  }).then((res) => res.json());
 }
 
 class GoodsItem {
@@ -40,18 +36,10 @@ class GoodsList {
   filteredItems = [];
 
   fetchGoods() {
-    const prom = new Promise((resolve, reject) => {
-      service(GET_GOODS_ITEMS, (data) => {
-        this.items = data;
-        this.filteredItems = data;
-        data === undefined ? reject(new Error("Ошибка")) : resolve();
-      });
-    });
-    prom.then(() => {
-      this.render();
-    });
-    prom.catch((err) => {
-      console.error(err);
+    return service(GET_GOODS_ITEMS).then((data) => {
+      this.items = data;
+      this.filteredItems = data;
+      return data;
     });
   }
 
@@ -86,7 +74,7 @@ class BasketGoods {
 }
 
 const goodsList = new GoodsList();
-goodsList.fetchGoods(() => {
+goodsList.fetchGoods().then((data) => {
   goodsList.render();
 });
 

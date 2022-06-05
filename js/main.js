@@ -37,19 +37,28 @@ class GoodsItem {
 
 class GoodsList {
   items = [];
+  filteredItems = [];
 
   fetchGoods(callback) {
     service(GET_GOODS_ITEMS, (data) => {
       this.items = data;
+      this.filteredItems = data;
       callback();
     });
   }
+
+  filter(str) {
+    this.filteredItems = this.items.filter(({ product_name }) => {
+      return new RegExp(str, "i").test(product_name);
+    });
+  }
+
   getCount() {
     return this.items.reduce((acc = 0, { price }) => acc + price, 0);
   }
 
   render() {
-    const goods = this.items
+    const goods = this.filteredItems
       .map((item) => {
         const goodsItem = new GoodsItem(item);
         return goodsItem.render();
@@ -75,3 +84,10 @@ goodsList.fetchGoods(() => {
 
 const basketGoods = new BasketGoods();
 basketGoods.fetchData();
+
+document
+  .getElementsByClassName("goods-search")[0]
+  .addEventListener("input", (event) => {
+    goodsList.filter(event.target.value);
+    goodsList.render();
+  });

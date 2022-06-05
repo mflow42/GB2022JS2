@@ -4,13 +4,13 @@ const GET_GOODS_ITEMS = `${BASE_URL}/catalogData.json`;
 const GET_BASKET_GOODS_ITEMS = `${BASE_URL}/getBasket.json`;
 
 function service(url, callback) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", url);
-  const loadHandler = () => {
-    callback(JSON.parse(xhr.response));
-  };
-  xhr.onload = loadHandler;
-  xhr.send();
+  fetch(url, {
+    method: 'GET',
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      callback(data);
+    });
 }
 
 class GoodsItem {

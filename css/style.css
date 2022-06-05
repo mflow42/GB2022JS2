@@ -1,3 +1,7 @@
+html {
+  overflow-y: scroll;
+}
+
 body {
   font-family: "SF Pro Display", sans-serif;
 }
@@ -18,26 +22,41 @@ button {
 .header {
   display: flex;
   justify-content: end;
+  flex-wrap: nowrap;
 }
 .container {
   display: flex;
 }
 
-.btn-cart {
-  background-color: #fafafa;
+.search {
+  display: flex;
+  margin: 0 15px 0 0;
+}
+.goods-search {
+  padding: 0px 10px;
+}
+
+.search-button {
+  background-color: #5dbea3;
+}
+
+.btn {
   padding: 10px 20px;
   border: 1px solid transparent;
-  color: #2f2a2d;
   border-radius: 5px;
   transition: all ease-in-out 0.4s;
   cursor: pointer;
 }
-.btn-cart:hover {
+.btn-cart {
+  background-color: #fafafa;
+  color: #2f2a2d;
+}
+.btn:hover {
   background-color: transparent;
   border-color: #fafafa;
   color: #fafafa;
 }
-.btn-cart,
+.btn,
 .logo {
   align-self: center;
 }

@@ -4,13 +4,13 @@ const GET_GOODS_ITEMS = `${BASE_URL}/catalogData.json`;
 const GET_BASKET_GOODS_ITEMS = `${BASE_URL}/getBasket.json`;
 
 function service(url, callback) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", url);
-  const loadHandler = () => {
-    callback(JSON.parse(xhr.response));
-  };
-  xhr.onload = loadHandler;
-  xhr.send();
+  fetch(url, {
+    method: "GET",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      callback(data);
+    });
 }
 
 class GoodsItem {
@@ -37,19 +37,36 @@ class GoodsItem {
 
 class GoodsList {
   items = [];
+  filteredItems = [];
 
-  fetchGoods(callback) {
-    service(GET_GOODS_ITEMS, (data) => {
-      this.items = data;
-      callback();
+  fetchGoods() {
+    const prom = new Promise((resolve, reject) => {
+      service(GET_GOODS_ITEMS, (data) => {
+        this.items = data;
+        this.filteredItems = data;
+        data === undefined ? reject(new Error("Ошибка")) : resolve();
+      });
+    });
+    prom.then(() => {
+      this.render();
+    });
+    prom.catch((err) => {
+      console.error(err);
     });
   }
+
+  filter(str) {
+    this.filteredItems = this.items.filter(({ product_name }) => {
+      return new RegExp(str, "i").test(product_name);
+    });
+  }
+
   getCount() {
     return this.items.reduce((acc = 0, { price }) => acc + price, 0);
   }
 
   render() {
-    const goods = this.items
+    const goods = this.filteredItems
       .map((item) => {
         const goodsItem = new GoodsItem(item);
         return goodsItem.render();
@@ -75,3 +92,10 @@ goodsList.fetchGoods(() => {
 
 const basketGoods = new BasketGoods();
 basketGoods.fetchData();
+
+document
+  .getElementsByClassName("goods-search")[0]
+  .addEventListener("input", (event) => {
+    goodsList.filter(event.target.value);
+    goodsList.render();
+  });

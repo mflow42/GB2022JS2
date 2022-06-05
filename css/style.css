@@ -36,10 +36,6 @@ button {
   padding: 0px 10px;
 }
 
-.search-button {
-  background-color: #5dbea3;
-}
-
 .btn {
   padding: 10px 20px;
   border: 1px solid transparent;
@@ -47,15 +43,79 @@ button {
   transition: all ease-in-out 0.4s;
   cursor: pointer;
 }
-.btn-cart {
-  background-color: #fafafa;
-  color: #2f2a2d;
-}
-.btn:hover {
+.btn-cart:hover {
   background-color: transparent;
   border-color: #fafafa;
   color: #fafafa;
 }
+.btn-cart {
+  background-color: #fafafa;
+  color: #2f2a2d;
+}
+.cart {
+  position: absolute;
+  border: 1px solid black;
+  right: 100px;
+  height: 100px;
+  background-color: white;
+  color: black;
+}
+.first-row {
+  display: grid;
+  padding: 10px;
+  grid-template-areas: "col-id col-product col-qty col-price col-total";
+  grid-template-rows: 1fr;
+  grid-template-columns: repeat(5, minmax(10px, 1fr));
+  grid-gap: 10px;
+}
+.cart-rows {
+  display: grid;
+  padding: 2px 10px;
+  grid-template-areas:
+    "col-id col-product col-qty col-price col-total"
+    ". . . . btn-cart-close";
+  grid-template-rows: 1fr;
+  grid-template-columns: repeat(5, minmax(10px, 1fr));
+  grid-gap: 10px;
+  align-items: center;
+}
+.btn-wrapper{
+  display: grid;
+}
+.btn-cart-close {
+  background-color: transparent;
+  border-color: #2f2a2d;
+  color: #2f2a2d;
+}
+.btn-cart-close:hover {
+  background-color: #999;
+  border-color: #fafafa;
+  color: #2f2a2d;
+}
+.col-id {
+  grid-row: 1;
+  grid-column: 1;
+}
+.col-product {
+  grid-row: 1;
+  grid-column: 2;
+}
+.col-qty {
+  grid-row: 1;
+  grid-column: 3;
+  justify-self: end;
+}
+.col-price {
+  grid-row: 1;
+  grid-column: 4;
+  justify-self: end;
+}
+.col-total {
+  grid-row: 1;
+  grid-column: 5;
+  justify-self: end;
+}
+
 .btn,
 .logo {
   align-self: center;

@@ -15,15 +15,13 @@ window.onload = () => {
     data: {
       items: [],
       searchValue: "",
-      isItemsEmpty: true,
       isVisibleCart: false,
       cart: {},
     },
 
     methods: {
       toggleCartVisibility() {
-        this.isVisibleCart ? (this.isVisibleCart = false)
-          : (this.isVisibleCart = true);
+        this.isVisibleCart = !this.isVisibleCart;
       },
     },
 
@@ -44,15 +42,11 @@ window.onload = () => {
           item.img = "https://via.placeholder.com/200x150";
         });
         this.items = data;
-        this.isItemsEmpty = this.items === [] ? true : false;
         return data;
       });
 
       service(GET_BASKET_GOODS_ITEMS).then((data) => {
         this.cart = data;
-        console.log(this.cart.amount);
-        console.log(this.cart.contents);
-        // TODO
         return data;
       });
     },

@@ -59,16 +59,16 @@
         </div>
       </header>
       <main class="main">
-        <div class="goods-list">
-          <div class="empty-data" v-if="isItemsEmpty">
-            <p>Нет данных</p>
-          </div>
+        <div class="goods-list" v-if="filteredItems.length">
           <div class="goods-item" v-for="item in filteredItems">
             <img :src="item.img" />
             <h3>{{item.product_name}}</h3>
             <p>{{item.price}}</p>
             <button class="buy-btn">Купить</button>
           </div>
+        </div>
+        <div class="empty-data" v-else>
+          <p>Нет данных</p>
         </div>
       </main>
     </div>

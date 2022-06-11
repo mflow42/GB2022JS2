@@ -12,18 +12,21 @@
     <div id="root">
       <header class="header">
         <div class="container">
-          <div class="search">
-            <input
-              type="text"
-              placeholder="Введите поисковый текст"
-              class="goods-search"
-              v-model="searchValue"
-            />
-          </div>
+          <search-input class="search" v-model="searchValue"></search-input>
           <div class="container-cart">
-            <custom-button class="btn btn-cart" @click="toggleCartVisibility">Корзина</custom-button>
-            <basket v-if="isVisibleCart" :cart="cart" @close="toggleCartVisibility">
-              <custom-button class="btn btn-cart-close" @click="toggleCartVisibility">Закрыть</custom-button>
+            <custom-button class="btn btn-cart" @click="toggleCartVisibility"
+              >Корзина</custom-button
+            >
+            <basket
+              v-if="isVisibleCart"
+              :cart="cart"
+              @close="toggleCartVisibility"
+            >
+              <custom-button
+                class="btn btn-cart-close"
+                @click="toggleCartVisibility"
+                >Закрыть</custom-button
+              >
             </basket>
           </div>
         </div>

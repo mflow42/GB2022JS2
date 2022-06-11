@@ -10,6 +10,56 @@ function service(url) {
 }
 
 window.onload = () => {
+  Vue.component("basket", {
+    props: ["cart"],
+    template: `
+      <div class="cart" >
+        <div class="cart-list">
+          <div class="first-row">
+            <div class="col-id">id</div>
+            <div class="col-product">product</div>
+            <div class="col-price">price</div>
+            <div class="col-qty">qty</div>
+            <div class="col-total">total</div>
+          </div>
+          <div class="cart-rows" v-for="item in cart.contents">
+            <div class="col-id">{{item.id_product}}</div>
+            <div class="col-product">{{item.product_name}}</div>
+            <div class="col-price">{{item.price}}</div>
+            <div class="col-qty">{{item.quantity}}</div>
+            <div class="col-total">{{item.price*item.quantity}}</div>
+          </div>
+          <div class="btn-wrapper">
+            <slot @click="$emit('close')"></slot>
+          </div>
+        </div>
+      </div>
+    `,
+  });
+
+  Vue.component("custom-button", {
+    template: `
+    <button
+    @click="$emit('click')"
+    type="button"
+  >
+    <slot></slot>
+  </button>
+    `,
+  });
+
+  Vue.component("good", {
+    props: ["item"],
+    template: `
+      <div class="goods-item">
+        <img :src="item.img" />
+        <h3>{{item.product_name}}</h3>
+        <p>{{item.price}}</p>
+        <button class="buy-btn">Купить</button>
+      </div>
+    `,
+  });
+
   const app = new Vue({
     el: "#root",
     data: {

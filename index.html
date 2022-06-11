@@ -21,51 +21,16 @@
             />
           </div>
           <div class="container-cart">
-            <button
-              class="btn btn-cart"
-              @click="toggleCartVisibility"
-              type="button"
-            >
-              Корзина
-            </button>
-            <div class="cart" v-if="isVisibleCart">
-              <div class="cart-list">
-                <div class="first-row">
-                  <div class="col-id">id</div>
-                  <div class="col-product">product</div>
-                  <div class="col-price">price</div>
-                  <div class="col-qty">qty</div>
-                  <div class="col-total">total</div>
-                </div>
-                <div class="cart-rows" v-for="item in cart.contents">
-                  <div class="col-id">{{item.id_product}}</div>
-                  <div class="col-product">{{item.product_name}}</div>
-                  <div class="col-price">{{item.price}}</div>
-                  <div class="col-qty">{{item.quantity}}</div>
-                  <div class="col-total">{{item.price*item.quantity}}</div>
-                </div>
-                <div class="btn-wrapper">
-                  <button
-                    class="btn btn-cart-close"
-                    @click="toggleCartVisibility"
-                    type="button"
-                  >
-                    Закрыть
-                  </button>
-                </div>
-              </div>
-            </div>
+            <custom-button class="btn btn-cart" @click="toggleCartVisibility">Корзина</custom-button>
+            <basket v-if="isVisibleCart" :cart="cart" @close="toggleCartVisibility">
+              <custom-button class="btn btn-cart-close" @click="toggleCartVisibility">Закрыть</custom-button>
+            </basket>
           </div>
         </div>
       </header>
       <main class="main">
         <div class="goods-list" v-if="filteredItems.length">
-          <div class="goods-item" v-for="item in filteredItems">
-            <img :src="item.img" />
-            <h3>{{item.product_name}}</h3>
-            <p>{{item.price}}</p>
-            <button class="buy-btn">Купить</button>
-          </div>
+          <good v-for="item in filteredItems" :item="item"></good>
         </div>
         <div class="empty-data" v-else>
           <p>Нет данных</p>

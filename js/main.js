@@ -11,29 +11,12 @@ function service(url) {
 
 window.onload = () => {
   Vue.component("search-input", {
-    inheritAttrs: false,
-    props: ['value'],
-    computed: {
-      inputListeners: function () {
-        var vm = this
-        return Object.assign({},
-          this.$listeners,
-          {
-            input: function (event) {
-              vm.$emit('input', event.target.value)
-            }
-          }
-        )
-      }
-    },
     template: `
         <input
           type="text"
           placeholder="Введите поисковый текст"
           class="goods-search"
-          v-bind:searchValue="value"
-          v-bind="$attrs"
-          v-on="inputListeners"
+          @input="$emit('input', $event.target.value)"
         />
     `
   });

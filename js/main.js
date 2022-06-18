@@ -1,7 +1,8 @@
 const BASE_URL =
-  "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses";
-const GET_GOODS_ITEMS = `${BASE_URL}/catalogData.json`;
-const GET_BASKET_GOODS_ITEMS = `${BASE_URL}/getBasket.json`;
+  "http://localhost:8000";
+const GET_GOODS_ITEMS = `${BASE_URL}/goods.json`;
+const GET_BASKET_GOODS_ITEMS = `${BASE_URL}/basket`;
+const ADD_BASKET_ITEM = `${BASE_URL}/basket-add`;
 
 function service(url) {
   return fetch(url, {
@@ -20,7 +21,7 @@ window.onload = () => {
         />
     `
   });
-  
+
   Vue.component("basket", {
     props: ["cart"],
     template: `
@@ -33,7 +34,7 @@ window.onload = () => {
             <div class="col-qty">qty</div>
             <div class="col-total">total</div>
           </div>
-          <div class="cart-rows" v-for="item in cart.contents">
+          <div class="cart-rows" v-for="item in cart">
             <div class="col-id">{{item.id_product}}</div>
             <div class="col-product">{{item.product_name}}</div>
             <div class="col-price">{{item.price}}</div>
@@ -46,6 +47,13 @@ window.onload = () => {
         </div>
       </div>
     `,
+
+    mounted() {
+      service(GET_BASKET_GOODS_ITEMS).then((data) => {
+        this.cart = data;
+        return data;
+      })
+    }
   });
 
   Vue.component("custom-button", {
@@ -62,12 +70,19 @@ window.onload = () => {
   Vue.component("good", {
     props: ["item"],
     template: `
-      <div class="goods-item">
+      <div :data-id='item.id_product'>
         <img :src="item.img" />
         <h3>{{item.product_name}}</h3>
         <p>{{item.price}}</p>
-        <button class="buy-btn">Купить</button>
+        <slot @click="$emit('click')"></slot>
       </div>
+    `,
+  });
+
+  Vue.component("buy-button", {
+    props: ["cart"],
+    template: `
+        <button @click="$emit('click', $event.target)">Купить</button>
     `,
   });
 
@@ -83,6 +98,12 @@ window.onload = () => {
     methods: {
       toggleCartVisibility() {
         this.isVisibleCart = !this.isVisibleCart;
+      },
+      addBasketItem(event) {
+        console.log(event.parentNode.dataset.id);
+        service(ADD_BASKET_ITEM).then((data) => {
+          // TODO
+        })
       },
     },
 
@@ -103,11 +124,6 @@ window.onload = () => {
           item.img = "https://via.placeholder.com/200x150";
         });
         this.items = data;
-        return data;
-      });
-
-      service(GET_BASKET_GOODS_ITEMS).then((data) => {
-        this.cart = data;
         return data;
       });
     },

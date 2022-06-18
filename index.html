@@ -1,44 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Интернет-магазин</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script src="js/main.js"></script>
-  </head>
 
-  <body>
-    <div id="root">
-      <header class="header">
-        <div class="container">
-          <search-input class="search" v-model="searchValue"></search-input>
-          <div class="container-cart">
-            <custom-button class="btn btn-cart" @click="toggleCartVisibility"
-              >Корзина</custom-button
-            >
-            <basket
-              v-if="isVisibleCart"
-              :cart="cart"
-              @close="toggleCartVisibility"
-            >
-              <custom-button
-                class="btn btn-cart-close"
-                @click="toggleCartVisibility"
-                >Закрыть</custom-button
-              >
-            </basket>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Интернет-магазин</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script src="js/main.js"></script>
+</head>
+
+<body>
+  <div id="root">
+    <header class="header">
+      <div class="container">
+        <search-input class="search" v-model="searchValue"></search-input>
+        <div class="container-cart">
+          <custom-button class="btn btn-cart" @click="toggleCartVisibility">Корзина</custom-button>
+          <basket v-if="isVisibleCart" :cart="cart" @close="toggleCartVisibility">
+            <custom-button class="btn btn-cart-close" @click="toggleCartVisibility">Закрыть</custom-button>
+          </basket>
         </div>
-      </header>
-      <main class="main">
-        <div class="goods-list" v-if="filteredItems.length">
-          <good v-for="item in filteredItems" :item="item"></good>
-        </div>
-        <div class="empty-data" v-else>
-          <p>Нет данных</p>
-        </div>
-      </main>
-    </div>
-  </body>
+      </div>
+    </header>
+    <main class="main">
+      <div class="goods-list" v-if="filteredItems.length">
+        <good class="goods-item" v-for="item in filteredItems" :item="item">
+          <buy-button class="buy-btn" :cart="cart" @click="addBasketItem"></buy-button>
+        </good>
+      </div>
+      <div class="empty-data" v-else>
+        <p>Нет данных</p>
+      </div>
+    </main>
+  </div>
+</body>
+
 </html>

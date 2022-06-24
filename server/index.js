@@ -20,6 +20,13 @@ const readGoods = () => readFile(GOODS, 'utf-8')
     return JSON.parse(goodsFile);
   });
 
+app.post('/goods', (req, res) => {
+  console.log(res.body);
+  readBasket().then((basket) => {
+    const basketItem = basket.find(({ id_product: _id }) => _id === req.body.id)
+  })
+  res.send()
+})
 
 app.get('/basket', (req, res) => {
   Promise.all([

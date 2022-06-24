@@ -2,12 +2,22 @@ const BASE_URL =
   "http://localhost:8000";
 const GET_GOODS_ITEMS = `${BASE_URL}/goods.json`;
 const GET_BASKET_GOODS_ITEMS = `${BASE_URL}/basket`;
-const ADD_BASKET_ITEM = `${BASE_URL}/basket-add`;
+const GOODS = `${BASE_URL}/goods`;
 
 function service(url) {
   return fetch(url, {
     method: "GET",
   }).then((res) => res.json());
+}
+
+function serviceWithBody(url = "", method = "POST", body = {}) {
+  return fetch(url, {
+    method,
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    },
+    body: JSON.stringify(body),
+  })
 }
 
 window.onload = () => {
@@ -70,20 +80,23 @@ window.onload = () => {
   Vue.component("good", {
     props: ["item"],
     template: `
-      <div :data-id='item.id_product'>
+      <div class="goods-item">
         <img :src="item.img" />
         <h3>{{item.product_name}}</h3>
         <p>{{item.price}}</p>
-        <slot @click="$emit('click')"></slot>
+        <custom-button class="buy-btn" @click="addToBasket">Купить</custom-button>
       </div>
     `,
-  });
-
-  Vue.component("buy-button", {
-    props: ["cart"],
-    template: `
-        <button @click="$emit('click', $event.target)">Купить</button>
-    `,
+    methods: {
+      addToBasket() {
+        debugger
+        serviceWithBody(GOODS, "POST", {
+          id: this.item.id_product,
+        }).then((data) => {
+          // TODO 
+        })
+      },
+    }
   });
 
   const app = new Vue({
@@ -98,12 +111,6 @@ window.onload = () => {
     methods: {
       toggleCartVisibility() {
         this.isVisibleCart = !this.isVisibleCart;
-      },
-      addBasketItem(event) {
-        console.log(event.parentNode.dataset.id);
-        service(ADD_BASKET_ITEM).then((data) => {
-          // TODO
-        })
       },
     },
 

@@ -24,8 +24,7 @@
     </header>
     <main class="main">
       <div class="goods-list" v-if="filteredItems.length">
-        <good class="goods-item" v-for="item in filteredItems" :item="item">
-          <buy-button class="buy-btn" :cart="cart" @click="addBasketItem"></buy-button>
+        <good v-for="item in filteredItems" :item="item">
         </good>
       </div>
       <div class="empty-data" v-else>

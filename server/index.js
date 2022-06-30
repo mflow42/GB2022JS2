@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { readFile, writeFile } from 'fs/promises';
 
-const BASKET = './public/basket_goods.json';
+const BASKET_PATH = './public/basket_goods.json';
 const GOODS = './public/goods.json';
 
 const app = express();
@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const readBasket = () => readFile(BASKET, 'utf-8')
+const readBasket = () => readFile(BASKET_PATH, 'utf-8')
   .then((basketFile) => {
     return JSON.parse(basketFile);
   });
@@ -21,9 +21,27 @@ const readGoods = () => readFile(GOODS, 'utf-8')
   });
 
 app.post('/goods', (req, res) => {
-  console.log(res.body);
   readBasket().then((basket) => {
     const basketItem = basket.find(({ id_product: _id }) => _id === req.body.id)
+    if (!basketItem) {
+      basket.push({
+        id_product: req.body.id,
+        quantity: 1,
+      })
+    } else {
+      basket = basket.map((basketItem) => {
+        if (basketItem.id_product === req.body.id) {
+          return {
+            ...basketItem,
+            quantity: basketItem.quantity + 1,
+          }
+        } else {
+          return basketItem;
+        }
+      })
+    }
+    writeFile(BASKET_PATH, JSON.stringify(basket));
+    console.log(basket);
   })
   res.send()
 })

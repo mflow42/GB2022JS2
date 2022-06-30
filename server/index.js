@@ -20,6 +20,25 @@ const readGoods = () => readFile(GOODS, 'utf-8')
     return JSON.parse(goodsFile);
   });
 
+function getReformBasket() {
+  return Promise.all([
+    readBasket(),
+    readGoods()
+  ]).then(([basketList, goodsList]) => {
+    const result = basketList.map((basketItem) => {
+      const goodsItem = goodsList.find(({ id_product: _goodsId }) => {
+        return _goodsId === basketItem.id_product
+      });
+      return {
+        ...basketItem,
+        ...goodsItem
+      }
+    })
+    return result;
+  })
+
+}
+
 app.post('/goods', (req, res) => {
   readBasket().then((basket) => {
     const basketItem = basket.find(({ id_product: _id }) => _id === req.body.id)
@@ -41,30 +60,18 @@ app.post('/goods', (req, res) => {
       })
     }
     writeFile(BASKET_PATH, JSON.stringify(basket));
-    console.log(basket);
+    return getReformBasket();
+  }).then((result) => {
+    res.send(result);
   })
-  res.send()
 })
 
 app.get('/basket', (req, res) => {
-  Promise.all([
-    readBasket(),
-    readGoods()
-  ]).then(([basketList, goodsList]) => {
-    return basketList.map((basketItem) => {
-      const goodsItem = goodsList.find(({ id_product: _goodsId }) => {
-        return _goodsId === basketItem.id_product
-      });
-      return {
-        ...basketItem,
-        ...goodsItem
-      }
-    })
+  getReformBasket().then((result) => {
+    res.send(JSON.stringify(result));
   })
-    .then((result) => {
-      res.send(JSON.stringify(result));
-    })
 })
+
 app.get('/basket-add', (req, res) => {
   console.log(req.body);
   readBasket().then((basketList) => {

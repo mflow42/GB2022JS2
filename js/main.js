@@ -89,7 +89,6 @@ window.onload = () => {
     `,
     methods: {
       addToBasket() {
-        debugger
         serviceWithBody(GOODS, "POST", {
           id: this.item.id_product,
         }).then((data) => {
